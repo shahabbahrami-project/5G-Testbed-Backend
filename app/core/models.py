@@ -128,32 +128,3 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class Sensor(models.Model):
-    """Sensor to be used for a site"""
-    name = models.CharField(max_length=255)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
-
-    def __str__(self):
-        return self.name
-
-
-class Site(models.Model):
-    """Site object"""
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
-    name = models.CharField(max_length=255)
-    locationX=models.CharField(max_length=50)
-    locationY=models.CharField(max_length=50)
-    link = models.CharField(max_length=255, blank=True)
-    sensors = models.ManyToManyField('Sensor')
-    image = models.ImageField(null=True, upload_to=site_image_file_path)
-
-    def __str__(self):
-        return self.name
