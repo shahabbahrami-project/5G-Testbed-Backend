@@ -1,10 +1,11 @@
 import uuid
 import os
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
                                         PermissionsMixin
 from django.conf import settings
-
+from django.contrib.postgres.fields import ArrayField
 # class UserManager(BaseUserManager):
 #
 #     def create_user(self, email, password=None, **extra_fields):
@@ -78,8 +79,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports email instead of username"""
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
-    observerInSitesIds = models.CharField(max_length=255, default="")
-    operatorInSitesIds = models.CharField(max_length=255,  default="")
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     image = models.ImageField(null=True, upload_to=user_image_file_path)
@@ -128,3 +127,23 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class SampleURLLC(models.Model):
+    slicename=models.CharField(max_length=150)
+    TargetSNR=models.FloatField(default=0.0, null=False, blank=False)
+    numberofUsers=models.IntegerField(default=1, null=False, blank=False)
+    numerologyID=ArrayField(ArrayField(models.IntegerField()))
+    sharedBandwidth=models.FloatField(default=0.0, null=False, blank=False)
+    reservedBandwidth=models.FloatField(default=0.0, null=False, blank=False)
+    channelGainShadowParam1=models.FloatField(null=True, blank=True)
+    channelGainFadeParam1=models.FloatField(null=True, blank=True)
+    channelGainFadeParam2=models.FloatField(null=True, blank=True)
+    power=models.FloatField(default=0.0, null=False, blank=False)
+    trafficDist=models.CharField(max_length=150)
+    trafficParam1=models.FloatField(null=True, blank=True)
+    trafficParam2=models.FloatField(null=True, blank=True)
+    created_at=models.DateTimeField(default=datetime.now)
+
+    def __str__(self):
+        return self.slicename
