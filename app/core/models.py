@@ -129,21 +129,27 @@ class Recipe(models.Model):
         return self.title
 
 
-class SampleURLLC(models.Model):
-    slicename=models.CharField(max_length=150)
-    TargetSNR=models.FloatField(default=0.0, null=False, blank=False)
-    numberofUsers=models.IntegerField(default=1, null=False, blank=False)
-    numerologyID=ArrayField(ArrayField(models.IntegerField()))
-    sharedBandwidth=models.FloatField(default=0.0, null=False, blank=False)
-    reservedBandwidth=models.FloatField(default=0.0, null=False, blank=False)
-    channelGainShadowParam1=models.FloatField(null=True, blank=True)
-    channelGainFadeParam1=models.FloatField(null=True, blank=True)
-    channelGainFadeParam2=models.FloatField(null=True, blank=True)
-    power=models.FloatField(default=0.0, null=False, blank=False)
-    trafficDist=models.CharField(max_length=150)
-    trafficParam1=models.FloatField(null=True, blank=True)
-    trafficParam2=models.FloatField(null=True, blank=True)
-    created_at=models.DateTimeField(default=datetime.now)
+
+class Urllc(models.Model):
+    """Ingredient to be used for a recipe"""
+    name = models.CharField(max_length=255)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    TargetSNR = models.FloatField(default=0.0, null=False, blank=False)
+    numberofUsers = models.IntegerField(default=1, null=False, blank=False)
+    numerology = models.CharField(max_length=255, null=True, blank=True)
+    sharedBandwidth = models.FloatField(default=0.0, null=False, blank=False)
+    reservedBandwidth = models.FloatField(default=0.0, null=False, blank=False)
+    channelGainShadowParam1 = models.FloatField(null=True, blank=True)
+    channelGainFadeParam1 = models.FloatField(null=True, blank=True)
+    channelGainFadeParam2 = models.FloatField(null=True, blank=True)
+    power = models.FloatField(default=0.0, null=False, blank=False)
+    trafficDist = models.CharField(max_length=150, null=True, blank=True)
+    trafficParam1 = models.FloatField(null=True, blank=True)
+    trafficParam2 = models.FloatField(null=True, blank=True)
+    created_at = models.DateTimeField(default=datetime.now)
 
     def __str__(self):
-        return self.slicename
+        return self.name
