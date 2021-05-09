@@ -1,22 +1,21 @@
-FROM python:3.7-alpine
-MAINTAINER Shahab App Developer
+FROM python:3.8.3-alpine
 
+WORKDIR /usr/src/app
+
+ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-COPY ./requirements.txt /requirements.txt
-RUN apk add --update --no-cache postgresql-client jpeg-dev
-RUN apk add --update --no-cache --virtual .tmp-build-deps \
+RUN apk add --update postgresql-client jpeg-dev
+RUN apk add --update --virtual .tmp-build-deps \
       gcc libc-dev linux-headers postgresql-dev musl-dev zlib zlib-dev
-RUN pip install -r /requirements.txt
-RUN apk del .tmp-build-deps
+      
+RUN pip install --upgrade pip
+COPY ./requirements.txt .
+RUN pip install -r requirements.txt
+RUN rm ./requirements.txt
 
-RUN mkdir /app
-WORKDIR /app
-COPY ./app /app
+COPY ./entrypoint.sh .
 
-RUN mkdir -p /vol/web/media
-RUN mkdir -p /vol/web/static
-RUN adduser -D user
-RUN chown -R user:user /vol/
-RUN chmod -R 755 /vol/web
-USER user
+COPY ./app .
+
+ENTRYPOINT [ "/usr/src/app/entrypoint.sh" ]
